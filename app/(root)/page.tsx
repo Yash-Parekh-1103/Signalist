@@ -19,7 +19,7 @@ const Home = () => {
                         title="Market Overview"
                         scriptUrl={`${scriptUrl}market-overview.js`}
                         config={MARKET_OVERVIEW_WIDGET_CONFIG}
-                        classname="custom-chart"
+                        className="custom-chart"
                         height={600}
                     />
                 </div>
