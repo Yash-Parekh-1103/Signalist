@@ -1,56 +1,53 @@
-'use client'
-import {SubmitHandler, useForm} from 'react-hook-form'
+'use client';
+
+import {useForm} from "react-hook-form";
 import {Button} from "@/components/ui/button";
 import InputField from "@/components/forms/InputField";
 import SelectField from "@/components/forms/SelectField";
 import {INVESTMENT_GOALS, PREFERRED_INDUSTRIES, RISK_TOLERANCE_OPTIONS} from "@/lib/constants";
 import {CountrySelectField} from "@/components/forms/CountrySelectFields";
 import FooterLink from "@/components/forms/FooterLink";
+import {signUpWithEmail} from "@/lib/actions/auth.actions";
+import {useRouter} from "next/navigation";
+import {toast} from "sonner";
 
 const SignUp = () => {
-
+    const router = useRouter()
     const {
         register,
         handleSubmit,
         control,
-        formState: { errors , isSubmitting },
+        formState: { errors, isSubmitting },
     } = useForm<SignUpFormData>({
-
-        defaultValues:{
-
-
-        fullName:"",
-        email:"",
-        password:"",
-        country:"",
-        investmentGoals:"Growth",
-        riskTolerance:"Medium",
-        preferredIndustry:"Technology",
+        defaultValues: {
+            fullName: '',
+            email: '',
+            password: '',
+            country: '',
+            investmentGoals: 'Growth',
+            riskTolerance: 'Medium',
+            preferredIndustry: 'Technology'
         },
+        mode: 'onBlur'
+    }, );
 
-        mode:"onBlur"
-
-
-    },);
-    const onSubmit = async (data:SignUpFormData) =>{
-
+    const onSubmit = async (data: SignUpFormData) => {
         try {
-            console.log(data);
-        }catch (e){
-            console.log(e);
+            const result = await signUpWithEmail(data);
+            if(result.success) router.push('/');
+        } catch (e) {
+            console.error(e);
+            toast.error('Sign up failed', {
+                description: e instanceof Error ? e.message : 'Failed to create an account.'
+            })
         }
     }
 
-
     return (
         <>
-        <h1 className="form-title">Sign Up & Personalize</h1>
-
-        {/*Here we have created useFormHook and onSubmit so now we can create Form    */}
+            <h1 className="form-title">Sign Up & Personalize</h1>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-                {/*INPUTS*/}
-
                 <InputField
                     name="fullName"
                     label="Full Name"
@@ -117,17 +114,13 @@ const SignUp = () => {
                     required
                 />
 
-
-
-
                 <Button type="submit" disabled={isSubmitting} className="yellow-btn w-full mt-5">
                     {isSubmitting ? 'Creating Account' : 'Start Your Investing Journey'}
                 </Button>
 
                 <FooterLink text="Already have an account?" linkText="Sign in" href="/sign-in" />
-
             </form>
         </>
     )
 }
-export default SignUp
+export default SignUp;
