@@ -13,7 +13,7 @@ const WatchlistButton = ({
                              type = "button",
                              onWatchlistChange,
                          }: WatchlistButtonProps) => {
-    const [added, setAdded] = useState<boolean>(!!isInWatchlist);
+    const [added, setAdded] = useState<boolean>(isInWatchlist);
 
     const label = useMemo(() => {
         if (type === "icon") return added ? "" : "";
